@@ -1,0 +1,289 @@
+openapi: 3.0.0
+info:
+  title: IGate API
+  version: 1.0.0
+  description: Mock API documentation for IGate integration endpoints
+servers:
+  - url: http://igate-api-igate-dev.apps.ocp-drc.bpjsketenagakerjaan.go.id/api
+  - url: http://localhost:3000/api
+paths:
+  /register:
+    post:
+      summary: Register a new integration
+      tags:
+        - Integration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: "https://example.com/module"
+                userName:
+                  type: string
+                  example: "septard90@gmail.com"
+                menuName: 
+                  type: string
+                  example: "Menu A"
+                subMenuName:
+                  type: string
+                  example: "Menu AA"
+                integrationStatus:
+                  type: string
+                  example: "T"
+                eligibilityStatus:
+                  type: string
+                  example: "T"
+                activeStatus:
+                  type: string
+                  example: "N"
+                eligibleData:
+                  type: string
+                  example: "{
+                    \"statusUat\": \"T\",
+                    \"statusHttps\": \"Y\",
+                    \"statusResponsive\": \"Y\"
+                  }"
+      responses:
+        '201':
+          description: Integration registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  userId:
+                    type: string
+                  url:
+                    type: string
+        '500':
+          description: Server error
+  /check-eligibility:
+    get:
+      summary: Check user eligibility for integration
+      tags:
+        - Integration
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: User ID to check eligibility for
+      responses:
+        '200':
+          description: Eligibility status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eligible:
+                    type: boolean
+        '500':
+          description: Server error
+  /modules:
+    get:
+      summary: Get list of modules with optional filters and pagination
+      tags:
+        - Integration
+      parameters:
+        - in: query
+          name: activeStatus
+          schema:
+            type: string
+          required: false
+          description: Filter by active status (Y/N)
+        - in: query
+          name: integrationStatus
+          schema:
+            type: string
+          required: false
+          description: Filter by integration status (Y/T)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: Number of records to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+          description: Offset for pagination
+      responses:
+        '200':
+          description: List of modules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            url:
+                              type: string
+                            userName:
+                              type: string
+                            menuName:
+                              type: string
+                            subMenuName:
+                              type: string
+                            integrationStatus:
+                              type: string
+                            eligibilityStatus:
+                              type: string
+                            activeStatus:
+                              type: string
+        '500':
+          description: Server error
+  /modules/{id}:
+    get:
+      summary: Get detail of a module by id
+      tags:
+        - Integration
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The id of the module
+      responses:
+        '200':
+          description: Module detail
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                          userName:
+                            type: string
+                          menuName:
+                            type: string
+                          subMenuName:
+                            type: string
+                          integrationStatus:
+                            type: string
+                          eligibilityStatus:
+                            type: string
+                          activeStatus:
+                            type: string
+        '404':
+          description: Module not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      messages:
+                        type: string
+        '500':
+          description: Server error
+  /modules/edit:
+    post:
+      summary: Edit a module by id
+      tags:
+        - Integration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "d1450850-465a-4bbb-92f5-468025b07aaa"
+                url:
+                  type: string
+                  example: "https://example.com/module"
+                menuName:
+                  type: string
+                  example: "Menu A"
+                subMenuName:
+                  type: string
+                  example: "Menu AA"
+                integrationStatus:
+                  type: string
+                  example: "Y"
+                eligibilityStatus:
+                  type: string
+                  example: "Y"
+                activeStatus:
+                  type: string
+                  example: "Y"
+      responses:
+        '200':
+          description: Update success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Update success
+        '400':
+          description: Update failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: Update failed
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  responseCode:
+                    type: integer
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
