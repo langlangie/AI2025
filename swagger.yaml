@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://igate-api-igate-dev.apps.ocp-drc.bpjsketenagakerjaan.go.id/api
   - url: http://localhost:3000/api
-  - url: https://ai2025-rt53.onrender.com
+  - url: https://ai2025-rt53.onrender.com/api
 paths:
   /register:
     post:
